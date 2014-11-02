@@ -6,14 +6,15 @@
 # The initial aim of this test will be to:
 # 	 [x]	1. hardcode some values to test
 #  	 [x]	2. generalize it to go from [n-1, x] (n dx dice)
-#    [x]	3. take values from the user and process them
-# 	 [ ]	4. build a simple GUI that takes input
-#  	 [ ]	5. add a GUI that displays the data values
-#  	 [ ]	6. optimize the calculation if possible
-# 	 [ ]	7. figure out how to do some sort of graph thing
-# 	 [ ]	8. generalize such that multiple dice are calculated/output
-# 	 [ ]	9. finalize the presentation of that output
-# 	 [ ]	10. show the averages for each one as well with formula n(x/2 + 1/2)
+#	 [x]	3. take values from the user and process them
+#	 [x]	4. generalize to a maximum entered value, print all combinations that do that
+# 	 [ ]	5. build a simple GUI that takes input
+#  	 [ ]	6. add a GUI that displays the data values
+#  	 [ ]	7. optimize the calculation if possible
+# 	 [ ]	8. figure out how to do some sort of graph thing
+# 	 [ ]	9. generalize such that multiple dice are calculated/output
+# 	 [ ]	10. finalize the presentation of that output
+# 	 [ ]	11. show the averages for each one as well with formula n(x/2 + 1/2)
 #
 # PARAMS:
 # 	n dx dice:
@@ -22,7 +23,7 @@
 
 # combination: calculate mathematical combinations of form (n choose k)
 def nCr(n, k)
-	return ( factorial(n) / ( factorial(k) * factorial(n - k) ) )
+	( factorial(n) / ( factorial(k) * factorial(n - k) ) )
 end
 
 # factorial: calculate factorial (no built in function)
@@ -38,22 +39,37 @@ def sum_component(n, x, s, k)
 	return a * b * c
 end
 
-def print_results(s)
+# print_sum: print one sum probability info
+def print_sum(s)
 	upper = ( (s - $n) / $x ).floor
 	result = 0
 	for k in 0..upper do
 		result = result + sum_component($n, $x, s, k)
 	end
 	prob = (result.to_f * 100/ ($x ** $n)).round(2)
-	puts "sum = #{s}: #{result} / #{$x**$n} = #{prob}%"
+	puts "sum = #{s}: #{result} / #{$x.to_i**$n} = #{prob}%"
 end
 
-print "Enter how many dice you want to roll: "
-$n = gets.chomp().to_i			# n
-print "Enter how many sides they have: "
-$x = gets.chomp().to_i			# x-sided dice
+# print_results: print one full die probability (for all sums)
+def print_results()
+	puts "For #{$n} d#{$x.to_i} dice, we find:"
+	for s in $n-1..$x*$n do
+		print_sum(s)
+	end
+	print "\n"
+end
 
-puts "For #{$n} d#{$x} dice, we find:"
-for s in $n-1..$x*$n do
-	print_results(s)
+print "Enter the max roll possible: "
+total = gets.chomp().to_i
+j = 1
+for i in 1..(total / j) do
+	$n = j
+	$x = total.to_f/j
+	if (total % j != 0)
+		j += 1
+		next
+	end
+	break if ($x == 1)
+	j += 1
+	print_results()
 end
