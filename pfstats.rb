@@ -8,13 +8,14 @@
 #  	 [x]	2. generalize it to go from [n-1, x] (n dx dice)
 #	 [x]	3. take values from the user and process them
 #	 [x]	4. generalize to a maximum entered value, print all combinations that do that
-# 	 [ ]	5. build a simple GUI that takes input
-#  	 [ ]	6. add a GUI that displays the data values
-#  	 [ ]	7. optimize the calculation if possible
-# 	 [ ]	8. figure out how to do some sort of graph thing
-# 	 [ ]	9. generalize such that multiple dice are calculated/output
-# 	 [ ]	10. finalize the presentation of that output
-# 	 [ ]	11. show the averages for each one as well with formula n(x/2 + 1/2)
+#	 [x]	5. change the output to show only relevant standard dice
+# 	 [ ]	6. build a simple GUI that takes input
+#  	 [ ]	7. add a GUI that displays the data values
+#  	 [ ]	8. optimize the calculation if possible
+# 	 [ ]	9. figure out how to do some sort of graph thing
+# 	 [ ]	10. generalize such that multiple dice are calculated/output
+# 	 [ ]	11. finalize the presentation of that output
+# 	 [ ]	12. show the averages for each one as well with formula n(x/2 + 1/2)
 #
 # PARAMS:
 # 	n dx dice:
@@ -59,17 +60,23 @@ def print_results()
 	print "\n"
 end
 
+def print_dice(total)
+	j = 1
+	for i in 1..(total / j) do
+		$n = j
+		$x = total/j
+		if (total % j != 0)
+			j += 1
+			next
+		end
+		break if ($x == 1)
+		j += 1
+		if ($x == 4 || $x == 6 || $x == 8 || $x == 10 || $x == 12 || $x == 20)
+			print_results()
+		end
+	end
+end
+
 print "Enter the max roll possible: "
 total = gets.chomp().to_i
-j = 1
-for i in 1..(total / j) do
-	$n = j
-	$x = total.to_f/j
-	if (total % j != 0)
-		j += 1
-		next
-	end
-	break if ($x == 1)
-	j += 1
-	print_results()
-end
+print_dice(total)
